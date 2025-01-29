@@ -1,0 +1,34 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+
+jobs:
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set dynamic date
+        id: set-date
+        run: |
+          DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "DATE=$DATE" >> "$GITHUB_ENV"
+      - name: Test Local Action
+        id: test-action
+        uses: systeminit/actions@v0.1
+        with:
+          changeSet: Testing Action - ${{ env.DATE }}
+          componentId: 01JJFCNPEGPWFHARX2C3GW98XR
+          domain: |
+            Region: us-east-1
+            BaseCidrBlock: 10.0.0.0/16
+            BaseNamingConvention: GitHub Action
+          applyOnSuccess: true
+          apiToken: ${{ secrets.SI_API_TOKEN }}
+
+      - name: Print Output
+        id: output
+        run: echo "${{ steps.test-action.outputs.managementFunctionLogs }}"
