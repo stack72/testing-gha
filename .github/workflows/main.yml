@@ -3,8 +3,6 @@ name: Continuous Integration
 on:
   workflow_dispatch:
 
-permissions:
-
 jobs:
   test-action:
     name: GitHub Actions Test
