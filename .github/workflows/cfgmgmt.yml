@@ -1,0 +1,31 @@
+name: Cfgmgmt Camp Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set dynamic date
+        id: set-date
+        run: |
+          DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "DATE=$DATE" >> "$GITHUB_ENV"
+      - name: Test Local Action
+        id: test-action
+        uses: systeminit/actions@v0.1
+        with:
+          changeSet: Cfgmgmt Demp - ${{ env.DATE }}
+          componentId: 01JKB4SGNVXJQD88G6V1NHS8GE
+          view: "Application Stack (ECS)"
+          domain: |
+            'New Container Image': dafresh/wensleydale
+          applyOnSuccess: true
+          apiToken: ${{ secrets.CFGMGMT_CAMP_TOKEN }}
+
+      - name: Print Output
+        id: output
+        run: echo "${{ steps.test-action.outputs.managementFunctionLogs }}"
